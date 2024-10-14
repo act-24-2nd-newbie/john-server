@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-@Entity
+@Entity(name = "task")
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,6 +27,10 @@ public class Task {
     private Instant modifiedDate;
     @Column(nullable = false)
     private Instant createdDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @PrePersist
     void beforeCreate() {
