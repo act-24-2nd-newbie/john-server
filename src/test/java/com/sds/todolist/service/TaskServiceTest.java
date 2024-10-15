@@ -1,5 +1,6 @@
 package com.sds.todolist.service;
 
+import com.sds.todolist.BasicUnitTest;
 import com.sds.todolist.domain.Task;
 import com.sds.todolist.dto.TaskCreateRequestDTO;
 import com.sds.todolist.dto.TaskUpdateRequestDTO;
@@ -22,7 +23,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-class TaskServiceTest {
+class TaskServiceTest extends BasicUnitTest {
 
     @InjectMocks
     TaskService subject;
@@ -32,10 +33,6 @@ class TaskServiceTest {
 
     @Captor
     ArgumentCaptor<Task> taskCaptor;
-
-    Long SOME_ID = 1L;
-    String SOME_CONTENTS = "SOME_CONTENTS";
-    Boolean SOME_IS_DONE = true;
 
     @Test
     void createTask() {
@@ -47,8 +44,9 @@ class TaskServiceTest {
     }
 
     @Test
-    void getAllTasks() {
-        subject.getAllTasks();
+    void getTasks() {
+
+        subject.getTasks(SOME_MEMBER_ID);
 
         then(taskRepository).should(times(1)).findAll();
     }
@@ -57,11 +55,11 @@ class TaskServiceTest {
     void updateTask() {
         TaskUpdateRequestDTO taskUpdateRequestDTO = new TaskUpdateRequestDTO(SOME_CONTENTS, SOME_IS_DONE);
         Optional<Task> optionalTask = Optional.ofNullable(Task.builder().build());
-        given(taskRepository.findById(eq(SOME_ID))).willReturn(optionalTask);
+        given(taskRepository.findById(eq(SOME_TASK_ID))).willReturn(optionalTask);
 
-        subject.updateTask(SOME_ID, taskUpdateRequestDTO);
+        subject.updateTask(SOME_TASK_ID, taskUpdateRequestDTO);
 
-        then(taskRepository).should(times(1)).findById(SOME_ID);
+        then(taskRepository).should(times(1)).findById(SOME_TASK_ID);
         then(taskRepository).should(times(1)).save(taskCaptor.capture());
         assertEquals(taskCaptor.getValue().getContents(), SOME_CONTENTS);
     }
@@ -75,8 +73,8 @@ class TaskServiceTest {
 
     @Test
     void deleteTask() {
-        subject.deleteTask(SOME_ID);
+        subject.deleteTask(SOME_TASK_ID);
 
-        then(taskRepository).should(times(1)).deleteById(SOME_ID);
+        then(taskRepository).should(times(1)).deleteById(SOME_TASK_ID);
     }
 }

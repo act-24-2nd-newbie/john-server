@@ -1,5 +1,6 @@
 package com.sds.todolist.domain;
 
+import com.sds.todolist.dto.MemberResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,5 +33,9 @@ public class Member {
     @PrePersist
     void beforeCreate() {
         signupDate = Instant.now();
+    }
+
+    public MemberResponseDto toResponse() {
+        return MemberResponseDto.builder().id(this.id).email(this.email).userName(this.userName).signupDate(this.signupDate).build();
     }
 }

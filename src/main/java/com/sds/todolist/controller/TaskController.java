@@ -20,9 +20,9 @@ public class TaskController {
         taskService.createTask(taskCreateRequestDTO);
     }
 
-    @GetMapping
-    public List<TaskResponseDto> getAllTasks() {
-        return taskService.getAllTasks();
+    @GetMapping("/members/{memberId}")
+    public List<TaskResponseDto> getTasks(@PathVariable Long memberId) {
+        return taskService.getTasks(memberId);
     }
 
     @PatchMapping("/{taskId}")

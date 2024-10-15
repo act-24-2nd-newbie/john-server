@@ -1,5 +1,6 @@
 package com.sds.todolist.service;
 
+import com.sds.todolist.domain.Member;
 import com.sds.todolist.domain.Task;
 import com.sds.todolist.dto.TaskCreateRequestDTO;
 import com.sds.todolist.dto.TaskResponseDto;
@@ -14,14 +15,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final MemberService memberService;
 
     public void createTask(TaskCreateRequestDTO taskCreateRequestDTO) {
-        Task task = Task.builder().contents(taskCreateRequestDTO.getContents()).build();
+        Member member = memberService.getMemberById(taskCreateRequestDTO.getMemberId());
+        Task task = Task.builder().contents(taskCreateRequestDTO.getContents()).member(member).build();
         taskRepository.save(task);
     }
 
-    public List<TaskResponseDto> getAllTasks() {
-        return taskRepository.findAll().stream().map(Task::toResponse).toList();
+    public List<TaskResponseDto> getTasks(Long memberId) {
+        return taskRepository.findByMemberId(memberId).stream().map(Task::toResponse).toList();
     }
 
     public void updateTask(Long taskId, TaskUpdateRequestDTO taskUpdateRequestDTO) {
